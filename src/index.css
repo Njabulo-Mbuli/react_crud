@@ -1,0 +1,12 @@
+body{
+    width:50%;
+    margin:auto;
+    font-size: 1.5rem;
+}
+input,button{
+   font-size: 1.5rem; 
+}
+
+table,th,td{
+    border:1px solid black;
+}

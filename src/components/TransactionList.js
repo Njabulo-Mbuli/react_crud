@@ -46,7 +46,7 @@ class TransactionList extends React.Component{
                     onAddOrEdit={this.onAddOrEdit}
                     currentIndex={this.state.currentIndex}
                     list={this.state.list}/>
-                <br/>
+                <hr/>
                 <p>List of transactions</p>
                 { this.state.list.length>0 ?
                     <table>

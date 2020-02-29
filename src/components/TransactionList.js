@@ -1,58 +1,29 @@
 import React from 'react'
 import TransactionForm from './TransactionForm'
+import { connect } from 'react-redux'
+import * as actions from "../actions/TransactionActions"
+import {bindActionCreators} from 'redux'
 
 class TransactionList extends React.Component{
-    state={
-        currentIndex:-1,
-        list: this.returnList()
-    }
-
-    returnList(){
-        if(localStorage.getItem("transactions")==null)
-            localStorage.setItem("transactions",JSON.stringify([]))
-       
-        return JSON.parse(localStorage.getItem("transactions"))
-    }
-
-    onAddOrEdit=(data)=>{
-        var list = this.returnList()
-
-        if(this.state.currentIndex==-1)
-            list.push(data)
-        else
-            list[this.state.currentIndex] = data
-
-        localStorage.setItem('transactions',JSON.stringify(list))
-        this.setState({currentIndex:-1,list:list})
-    }
-
     handleEdit = (index) =>{
-        this.setState({
-            currentIndex:index
-        })
+        this.props.updateTransaction(index)
     }
 
     handleDelete = index =>{
-        let list = this.returnList()
-        list.splice(index,1)
-        localStorage.setItem('transactions',JSON.stringify(list))
-        this.setState({currentIndex:-1,list:list})
+        this.props.deleteTransaction(index)
     }
 
     render(){
         return(
             <div>
-                <TransactionForm
-                    onAddOrEdit={this.onAddOrEdit}
-                    currentIndex={this.state.currentIndex}
-                    list={this.state.list}/>
+                <TransactionForm/>
                 <hr/>
                 <p>List of transactions</p>
-                { this.state.list.length>0 ?
+                { this.props.list.length>0 ?
                     <table>
                         <tbody>
                             {
-                                this.state.list.map((item,index)=>{
+                                this.props.list.map((item,index)=>{
                                     return<tr key={index}>
                                         <td>{item.bAccountNo}</td>
                                         <td>{item.bName}</td>
@@ -69,4 +40,15 @@ class TransactionList extends React.Component{
         )
     }
 }
-export default TransactionList;
+const mapStateToProps = state =>{
+    return{
+        list:state.list
+    }
+}
+const mapDispatchToProps = dispatch =>{
+    return bindActionCreators({
+        deleteTransaction: actions.Delete,
+        updateTransaction: actions.UpdateIndex
+    },dispatch)
+}
+export default connect(mapStateToProps,mapDispatchToProps)(TransactionList);
